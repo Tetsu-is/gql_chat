@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -8,8 +9,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/Tetsu-is/gql_chat/graph"
-	"github.com/jinzhu/gorm"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 const defaultPort = "8080"
@@ -24,13 +25,13 @@ func main() {
 	password := os.Getenv("MYSQL_PASSWORD")
 	dbPort := os.Getenv("MYSQL_PORT")
 	dbName := os.Getenv("MYSQL_DATABASE")
-	dsn := user + ":" + password + "@tcp(mysql:" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := user + ":" + password + "@tcp(db:" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	fmt.Println(db)
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
 
