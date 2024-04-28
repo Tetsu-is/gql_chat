@@ -1,0 +1,35 @@
+version: '3'
+services:
+  api:
+    container_name: api
+    image: golang:1.22.2-bullseye
+    volumes:
+      - ./api:/api/
+    working_dir: /api
+    ports:
+        - ${GO_PORT}:${GO_PORT}
+    # ホットリロード
+    command: /bin/bash -c "go get -u github.com/cosmtrek/air && go build -o /go/bin/air github.com/cosmtrek/air && air -c .air.toml"
+    tty: true
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - GO_PORT=${GO_PORT}
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: mysql:latest
+    restart: always
+    ports:
+      - ${MYSQL_PORT}:${MYSQL_PORT}
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - TZ=${TZ}
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
