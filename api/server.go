@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/Tetsu-is/gql_chat/database"
 	"github.com/Tetsu-is/gql_chat/graph"
 	"github.com/Tetsu-is/gql_chat/services"
 	"gorm.io/driver/mysql"
@@ -31,6 +32,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	db.AutoMigrate(&database.Message{})
 
 	service := services.New(db)
 

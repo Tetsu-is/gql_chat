@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Tetsu-is/gql_chat/db"
+	"github.com/Tetsu-is/gql_chat/database"
 	"github.com/Tetsu-is/gql_chat/graph/model"
 	"gorm.io/gorm"
 )
@@ -14,7 +14,7 @@ type messageServices struct {
 	db *gorm.DB
 }
 
-func convertMessage(message *db.Message) *model.Message {
+func convertMessage(message *database.Message) *model.Message {
 	return &model.Message{
 		ID:       strconv.FormatUint(uint64(message.ID), 10),
 		UserID:   strconv.FormatInt(int64(message.UserID), 10),
@@ -24,7 +24,7 @@ func convertMessage(message *db.Message) *model.Message {
 }
 
 func (s *messageServices) GetLatestMessagesByIndex(ctx context.Context, index int) ([]*model.Message, error) {
-	var messages []db.Message
+	var messages []database.Message
 	s.db.Where("id >= ?", index).Find(&messages)
 	if len(messages) == 0 {
 		return nil, fmt.Errorf("no messages found")
