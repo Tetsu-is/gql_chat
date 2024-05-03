@@ -34,7 +34,9 @@ func main() {
 	}
 
 	db.AutoMigrate(&database.Message{})
+	db.AutoMigrate(&database.User{})
 	database.MessageSeed(db)
+	database.UserSeed(db)
 
 	service := services.New(db)
 

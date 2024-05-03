@@ -12,10 +12,13 @@ type Message {
 type User {
   id: ID!
   name: String!
+  email: String!
 }
 
 type Query {
   messages: [Message!]!
+  users: [User!]!
+  user(id: ID!): User
 }
 
 input NewMessage {
@@ -23,6 +26,12 @@ input NewMessage {
   body: String!
 }
 
+input NewUser {
+  name: String!
+  email: String!
+}
+
 type Mutation {
   createMessage(input: NewMessage!): Message!
+  createUser(input: NewUser!): User!
 }

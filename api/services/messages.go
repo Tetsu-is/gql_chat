@@ -35,3 +35,10 @@ func (s *messageServices) GetLatestMessagesByIndex(ctx context.Context, index in
 	}
 	return convertedMessages, nil
 }
+
+// func (s *messageServices) CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
+// 	parsedID, err := strconv.ParseInt(input.UserID, 10, 64)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to parse user ID: %w", err)
+// 	}
+// }

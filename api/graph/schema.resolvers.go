@@ -16,9 +16,24 @@ func (r *mutationResolver) CreateMessage(ctx context.Context, input model.NewMes
 	panic(fmt.Errorf("not implemented: CreateMessage - createMessage"))
 }
 
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
+}
+
 // Messages is the resolver for the messages field.
 func (r *queryResolver) Messages(ctx context.Context) ([]*model.Message, error) {
 	return r.Srv.GetLatestMessagesByIndex(ctx, 0)
+}
+
+// Users is the resolver for the users field.
+func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
+	panic(fmt.Errorf("not implemented: Users - users"))
+}
+
+// User is the resolver for the user field.
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	return r.Srv.GetUserByID(ctx, id)
 }
 
 // Mutation returns MutationResolver implementation.
