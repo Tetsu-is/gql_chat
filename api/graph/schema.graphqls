@@ -5,6 +5,7 @@
 type Message {
   id: ID!
   user_id: ID!
+  user_name: String!
   body: String!
 }
 

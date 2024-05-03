@@ -48,9 +48,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Message struct {
-		Body   func(childComplexity int) int
-		ID     func(childComplexity int) int
-		UserID func(childComplexity int) int
+		Body     func(childComplexity int) int
+		ID       func(childComplexity int) int
+		UserID   func(childComplexity int) int
+		UserName func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -113,6 +114,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Message.UserID(childComplexity), true
+
+	case "Message.user_name":
+		if e.complexity.Message.UserName == nil {
+			break
+		}
+
+		return e.complexity.Message.UserName(childComplexity), true
 
 	case "Mutation.createMessage":
 		if e.complexity.Mutation.CreateMessage == nil {
@@ -428,6 +436,50 @@ func (ec *executionContext) fieldContext_Message_user_id(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _Message_user_name(ctx context.Context, field graphql.CollectedField, obj *model.Message) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Message_user_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Message_user_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Message",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Message_body(ctx context.Context, field graphql.CollectedField, obj *model.Message) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Message_body(ctx, field)
 	if err != nil {
@@ -515,6 +567,8 @@ func (ec *executionContext) fieldContext_Mutation_createMessage(ctx context.Cont
 				return ec.fieldContext_Message_id(ctx, field)
 			case "user_id":
 				return ec.fieldContext_Message_user_id(ctx, field)
+			case "user_name":
+				return ec.fieldContext_Message_user_name(ctx, field)
 			case "body":
 				return ec.fieldContext_Message_body(ctx, field)
 			}
@@ -578,6 +632,8 @@ func (ec *executionContext) fieldContext_Query_messages(ctx context.Context, fie
 				return ec.fieldContext_Message_id(ctx, field)
 			case "user_id":
 				return ec.fieldContext_Message_user_id(ctx, field)
+			case "user_name":
+				return ec.fieldContext_Message_user_name(ctx, field)
 			case "body":
 				return ec.fieldContext_Message_body(ctx, field)
 			}
@@ -2637,6 +2693,11 @@ func (ec *executionContext) _Message(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "user_id":
 			out.Values[i] = ec._Message_user_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "user_name":
+			out.Values[i] = ec._Message_user_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

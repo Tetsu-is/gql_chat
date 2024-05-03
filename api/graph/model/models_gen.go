@@ -3,9 +3,10 @@
 package model
 
 type Message struct {
-	ID     string `json:"id"`
-	UserID string `json:"user_id"`
-	Body   string `json:"body"`
+	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
+	UserName string `json:"user_name"`
+	Body     string `json:"body"`
 }
 
 type Mutation struct {
