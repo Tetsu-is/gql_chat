@@ -22,8 +22,8 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 // Messages is the resolver for the messages field.
-func (r *queryResolver) Messages(ctx context.Context) ([]*model.Message, error) {
-	return r.Srv.GetLatestMessagesByIndex(ctx, 0)
+func (r *queryResolver) Messages(ctx context.Context, index int) ([]*model.Message, error) {
+	return r.Srv.GetLatestMessagesByIndex(ctx, index)
 }
 
 // Users is the resolver for the users field.

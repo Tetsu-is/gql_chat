@@ -16,7 +16,7 @@ type User {
 }
 
 type Query {
-  messages: [Message!]!
+  messages(index: Int!): [Message!]!
   users: [User!]!
   user(id: ID!): User
 }
