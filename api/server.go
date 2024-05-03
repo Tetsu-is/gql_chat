@@ -34,6 +34,7 @@ func main() {
 	}
 
 	db.AutoMigrate(&database.Message{})
+	database.MessageSeed(db)
 
 	service := services.New(db)
 
