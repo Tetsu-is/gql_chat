@@ -18,7 +18,7 @@ func (r *mutationResolver) CreateMessage(ctx context.Context, input model.NewMes
 
 // Messages is the resolver for the messages field.
 func (r *queryResolver) Messages(ctx context.Context) ([]*model.Message, error) {
-	panic(fmt.Errorf("not implemented: Messages - messages"))
+	return r.Srv.GetLatestMessagesByIndex(ctx, 0)
 }
 
 // Mutation returns MutationResolver implementation.
