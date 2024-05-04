@@ -19,6 +19,7 @@ type services struct {
 
 type MessageService interface {
 	GetLatestMessagesByIndex(ctx context.Context, index int) ([]*model.Message, error)
+	CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error)
 }
 
 type UserService interface {

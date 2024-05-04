@@ -13,7 +13,7 @@ import (
 
 // CreateMessage is the resolver for the createMessage field.
 func (r *mutationResolver) CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
-	panic(fmt.Errorf("not implemented: CreateMessage - createMessage"))
+	return r.Srv.CreateMessage(ctx, input)
 }
 
 // CreateUser is the resolver for the createUser field.

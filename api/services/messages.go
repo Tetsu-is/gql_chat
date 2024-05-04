@@ -36,9 +36,23 @@ func (s *messageServices) GetLatestMessagesByIndex(ctx context.Context, index in
 	return convertedMessages, nil
 }
 
-// func (s *messageServices) CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
-// 	parsedID, err := strconv.ParseInt(input.UserID, 10, 64)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to parse user ID: %w", err)
-// 	}
-// }
+func (s *messageServices) CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
+	parsedID, err := strconv.ParseInt(input.UserID, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse user ID: %w", err)
+	}
+	var user database.User
+	s.db.Where("id = ?", parsedID).First(&user)
+	userName := user.UserName
+	message := database.Message{
+		UserID:   int(parsedID),
+		UserName: userName,
+		Body:     input.Body,
+	}
+	result := s.db.Create(&message)
+
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("failed to insert message")
+	}
+	return convertMessage(&message), nil
+}
