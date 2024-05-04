@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/Tetsu-is/gql_chat/database"
@@ -25,6 +26,19 @@ func (s *userServices) GetUserByID(ctx context.Context, id string) (*model.User,
 	s.db.Where("id = ?", id).First(&user)
 	if user.ID == 0 {
 		return nil, nil
+	}
+	return convertUser(&user), nil
+}
+
+func (s *userServices) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	user := database.User{
+		UserName: input.Name,
+		Email:    input.Email,
+	}
+	result := s.db.Create(&user)
+
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("failed to insert user")
 	}
 	return convertUser(&user), nil
 }

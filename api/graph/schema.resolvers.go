@@ -18,7 +18,7 @@ func (r *mutationResolver) CreateMessage(ctx context.Context, input model.NewMes
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
+	return r.Srv.CreateUser(ctx, input)
 }
 
 // Messages is the resolver for the messages field.
