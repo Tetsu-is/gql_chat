@@ -7,6 +7,8 @@ package graph
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/Tetsu-is/gql_chat/graph/model"
 )
@@ -41,11 +43,44 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 	return r.Srv.GetUserByID(ctx, id)
 }
 
+// AddedMessage is the resolver for the addedMessage field.
+func (r *subscriptionResolver) AddedMessage(ctx context.Context) (<-chan *model.Message, error) {
+	ch := make(chan *model.Message)
+
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+
+			t := time.Now()
+
+			msg := &model.Message{
+				ID:       "999",
+				UserID:   "999",
+				UserName: "Bot",
+				Body:     strconv.Itoa(t.Second()),
+			}
+
+			select {
+			case <-ctx.Done():
+				fmt.Println("Subscription closed")
+				return
+			case ch <- msg:
+			}
+		}
+	}()
+
+	return ch, nil
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// Subscription returns SubscriptionResolver implementation.
+func (r *Resolver) Subscription() SubscriptionResolver { return &subscriptionResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }

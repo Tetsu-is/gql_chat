@@ -25,6 +25,9 @@ type NewUser struct {
 type Query struct {
 }
 
+type Subscription struct {
+}
+
 type UpdateUserInput struct {
 	Name  *string `json:"name,omitempty"`
 	Email *string `json:"email,omitempty"`
