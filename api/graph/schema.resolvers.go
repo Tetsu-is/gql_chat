@@ -21,6 +21,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	return r.Srv.CreateUser(ctx, input)
 }
 
+// UpdateUser is the resolver for the updateUser field.
+func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input model.UpdateUserInput) (*model.User, error) {
+	return r.Srv.UpdateUser(ctx, id, input)
+}
+
 // Messages is the resolver for the messages field.
 func (r *queryResolver) Messages(ctx context.Context, index int) ([]*model.Message, error) {
 	return r.Srv.GetLatestMessagesByIndex(ctx, index)

@@ -25,6 +25,7 @@ type MessageService interface {
 type UserService interface {
 	GetUserByID(ctx context.Context, id string) (*model.User, error)
 	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
+	UpdateUser(ctx context.Context, id string, input model.UpdateUserInput) (*model.User, error)
 }
 
 func New(db *gorm.DB) Services {

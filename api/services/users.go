@@ -42,3 +42,32 @@ func (s *userServices) CreateUser(ctx context.Context, input model.NewUser) (*mo
 	}
 	return convertUser(&user), nil
 }
+
+func (s *userServices) UpdateUser(ctx context.Context, id string, input model.UpdateUserInput) (*model.User, error) {
+	if input.Name == nil && input.Email == nil {
+		return nil, fmt.Errorf("no update input")
+	}
+
+	parsedId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse id")
+	}
+	var user database.User
+	result := s.db.Where("id = ?", parsedId).First(&user)
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	if input.Name != nil {
+		user.UserName = *input.Name
+	}
+	if input.Email != nil {
+		user.Email = *input.Email
+	}
+
+	result = s.db.Save(&user)
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("failed to update user")
+	}
+	return convertUser(&user), nil
+}
