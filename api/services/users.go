@@ -16,8 +16,9 @@ type userServices struct {
 
 func convertUser(user *database.User) *model.User {
 	return &model.User{
-		ID:   strconv.FormatUint(uint64(user.ID), 10),
-		Name: user.UserName,
+		ID:    strconv.FormatUint(uint64(user.ID), 10),
+		Name:  user.UserName,
+		Email: user.Email,
 	}
 }
 
