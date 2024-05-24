@@ -11,6 +11,7 @@ import (
 	"github.com/Tetsu-is/gql_chat/database"
 	"github.com/Tetsu-is/gql_chat/graph"
 	"github.com/Tetsu-is/gql_chat/services"
+	"github.com/rs/cors"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -47,9 +48,14 @@ func main() {
 
 	srv.AddTransport(&transport.Websocket{})
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	mux := http.NewServeMux()
+	// http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	// http.Handle("/query", srv)
+	mux.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	mux.Handle("/query", srv)
+
+	handler := cors.Default().Handler(mux)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
