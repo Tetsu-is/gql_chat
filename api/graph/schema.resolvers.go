@@ -7,8 +7,6 @@ package graph
 import (
 	"context"
 	"fmt"
-	"strconv"
-	"time"
 
 	"github.com/Tetsu-is/gql_chat/graph/model"
 )
@@ -45,30 +43,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 
 // AddedMessage is the resolver for the addedMessage field.
 func (r *subscriptionResolver) AddedMessage(ctx context.Context) (<-chan *model.Message, error) {
-	ch := make(chan *model.Message)
-
-	go func() {
-		for {
-			time.Sleep(1 * time.Second)
-
-			t := time.Now()
-
-			msg := &model.Message{
-				ID:       "999",
-				UserID:   "999",
-				UserName: "Bot",
-				Body:     strconv.Itoa(t.Second()),
-			}
-
-			select {
-			case <-ctx.Done():
-				fmt.Println("Subscription closed")
-				return
-			case ch <- msg:
-			}
-		}
-	}()
-
+	ch := r.Srv.PickMessageFromChannel()
 	return ch, nil
 }
 

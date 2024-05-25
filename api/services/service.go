@@ -20,6 +20,7 @@ type services struct {
 type MessageService interface {
 	GetLatestMessagesByIndex(ctx context.Context, index int) ([]*model.Message, error)
 	CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error)
+	PickMessageFromChannel() <-chan *model.Message
 }
 
 type UserService interface {
@@ -30,7 +31,7 @@ type UserService interface {
 
 func New(db *gorm.DB) Services {
 	return &services{
-		messageServices: &messageServices{db: db},
+		messageServices: &messageServices{db: db, ch: make(chan *model.Message)},
 		userServices:    &userServices{db: db},
 	}
 }

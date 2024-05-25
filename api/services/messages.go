@@ -12,6 +12,7 @@ import (
 
 type messageServices struct {
 	db *gorm.DB
+	ch chan *model.Message
 }
 
 func convertMessage(message *database.Message) *model.Message {
@@ -51,8 +52,15 @@ func (s *messageServices) CreateMessage(ctx context.Context, input model.NewMess
 	}
 	result := s.db.Create(&message)
 
+	//store message in the channel
+	s.ch <- convertMessage(&message)
+
 	if result.RowsAffected == 0 {
 		return nil, fmt.Errorf("failed to insert message")
 	}
 	return convertMessage(&message), nil
+}
+
+func (s *messageServices) PickMessageFromChannel() <-chan *model.Message {
+	return s.ch
 }
